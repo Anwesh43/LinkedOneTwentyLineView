@@ -28,6 +28,11 @@ fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
 
+fun Paint.setStrokeStyle(w : Float, h : Float) {
+    strokeWidth = Math.min(w, h) / strokeFactor
+    color = foreColor
+    strokeCap = Paint.Cap.ROUND
+}
 fun Canvas.drawOneTwentyLine(i : Int, size : Float, sc1 : Float, sc2 : Float, paint : Paint) {
     save()
     translate(i * size, 0f)
@@ -42,6 +47,7 @@ fun Canvas.drawOTLNode(i : Int, scale : Float, paint : Paint) {
     val gap : Float = w / (nodes + 1)
     val size : Float = gap / sizeFactor
     val xGap : Float = (2 * size) / lines
+    paint.setStrokeStyle(w, h)
     save()
     translate(gap * (i + 1), h/2)
     for (j in 0..(lines - 1)) {
