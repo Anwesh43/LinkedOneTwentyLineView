@@ -185,4 +185,26 @@ class OneTwentyLineView(ctx : Context) : View(ctx) {
             curr.startUpdating(cb)
         }
     }
+
+    data class Renderer(var view : OneTwentyLineView) {
+
+        private val animator : Animator = Animator(view)
+        private val otl : OneTwentyLine = OneTwentyLine(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(backColor)
+            otl.draw(canvas, paint)
+            animator.animate {
+                otl.update {i, scl ->
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            otl.startUpdating {
+                animator.start()
+            }
+        }
+    }
 }
