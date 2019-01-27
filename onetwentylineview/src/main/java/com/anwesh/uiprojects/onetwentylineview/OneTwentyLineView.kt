@@ -27,3 +27,29 @@ fun Float.divideScale(i : Int, n : Int) : Float = Math.min(n.inverse(), maxScale
 fun Float.scaleFactor() : Float = Math.floor(this / scDiv).toFloat()
 fun Float.mirrorValue(a : Int, b : Int) : Float = (1 - scaleFactor()) * a.inverse() + scaleFactor() * b.inverse()
 fun Float.updateValue(dir : Float, a : Int, b : Int) : Float = mirrorValue(a, b) * dir * scGap
+
+fun Canvas.drawOneTwentyLine(i : Int, size : Float, sc1 : Float, sc2 : Float, paint : Paint) {
+    save()
+    translate(i * size, 0f)
+    rotate(120f * (1 - sc2))
+    drawLine(0f, 0f, size, 0f, paint)
+    restore()
+}
+
+fun Canvas.drawOTLNode(i : Int, scale : Float, paint : Paint) {
+    val w : Float = width.toFloat()
+    val h : Float = height.toFloat()
+    val gap : Float = w / (nodes + 1)
+    val size : Float = gap / sizeFactor
+    val xGap : Float = (2 * size) / lines
+    save()
+    translate(gap * (i + 1), h/2)
+    for (j in 0..(lines - 1)) {
+        val scj1 : Float = scale.divideScale(0, 2)
+        val scj2 : Float = scale.divideScale(1, 2)
+        save()
+        drawOneTwentyLine(j, xGap, scj1, scj2, paint)
+        restore()
+    }
+    restore()
+}
