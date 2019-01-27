@@ -216,4 +216,12 @@ class OneTwentyLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    companion object {
+        fun create(activity : Activity) : OneTwentyLineView {
+            val view : OneTwentyLineView = OneTwentyLineView(activity)
+            activity.setContentView(view)
+            return view 
+        }
+    }
 }
