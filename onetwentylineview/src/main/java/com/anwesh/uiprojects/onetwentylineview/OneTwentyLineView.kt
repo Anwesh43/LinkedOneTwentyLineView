@@ -118,4 +118,48 @@ class OneTwentyLineView(ctx : Context) : View(ctx) {
             }
         }
     }
+
+    data class OTLNode(var i : Int = 0, val state : State = State()) {
+
+        private var next : OTLNode? = null
+        private var prev : OTLNode? = null
+
+        init {
+
+        }
+
+        fun addNeighbor() {
+            if (i < nodes - 1) {
+                next = OTLNode(i + 1)
+                next?.prev = this
+            }
+        }
+
+        fun draw(canvas : Canvas, paint : Paint) {
+            canvas.drawOTLNode(i, state.scale, paint)
+            prev?.draw(canvas, paint)
+        }
+
+        fun update(cb : (Int, Float) -> Unit) {
+            state.update {
+                cb(i, it)
+            }
+        }
+
+        fun startUpdating(cb : () -> Unit) {
+            state.startUpdating(cb)
+        }
+
+        fun getNext(dir : Int, cb : () -> Unit) : OTLNode {
+            var curr : OTLNode? = prev
+            if (dir == 1) {
+                curr = next
+            }
+            if (curr != null) {
+                return curr
+            }
+            cb()
+            return this 
+        }
+    }
 }
