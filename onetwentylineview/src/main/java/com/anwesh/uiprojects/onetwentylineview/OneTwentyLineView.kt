@@ -38,7 +38,7 @@ fun Canvas.drawOneTwentyLine(i : Int, size : Float, sc1 : Float, sc2 : Float, pa
     save()
     translate(i * size, 0f)
     rotate(120f * (1 - sc2))
-    drawLine(0f, 0f, size, 0f, paint)
+    drawLine(0f, 0f, size * sc1, 0f, paint)
     restore()
 }
 
@@ -48,12 +48,14 @@ fun Canvas.drawOTLNode(i : Int, scale : Float, paint : Paint) {
     val gap : Float = w / (nodes + 1)
     val size : Float = gap / sizeFactor
     val xGap : Float = (2 * size) / lines
+    val sc1 : Float = scale.divideScale(0, 2)
+    val sc2 : Float = scale.divideScale(1, 2)
     paint.setStrokeStyle(w, h)
     save()
-    translate(gap * (i + 1), h/2)
+    translate(gap * (i + 1) - size, h/2)
     for (j in 0..(lines - 1)) {
-        val scj1 : Float = scale.divideScale(0, 2)
-        val scj2 : Float = scale.divideScale(1, 2)
+        val scj1 : Float = sc1.divideScale(j, lines)
+        val scj2 : Float = sc2.divideScale(j, lines)
         save()
         drawOneTwentyLine(j, xGap, scj1, scj2, paint)
         restore()
@@ -134,7 +136,7 @@ class OneTwentyLineView(ctx : Context) : View(ctx) {
         private var prev : OTLNode? = null
 
         init {
-
+            addNeighbor()
         }
 
         fun addNeighbor() {
@@ -221,7 +223,7 @@ class OneTwentyLineView(ctx : Context) : View(ctx) {
         fun create(activity : Activity) : OneTwentyLineView {
             val view : OneTwentyLineView = OneTwentyLineView(activity)
             activity.setContentView(view)
-            return view 
+            return view
         }
     }
 }
